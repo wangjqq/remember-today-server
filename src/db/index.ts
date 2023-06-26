@@ -1,11 +1,15 @@
 import mysql from 'mysql'
+import dotenv from 'dotenv'
+
+dotenv.config({ path: __dirname + '/../../.env' })
+const { host, user, port, password, database } = process.env
 
 const db = mysql.createPool({
-  host: process.env.host,
-  user: process.env.user,
-  port: process.env.port as any,
-  password: process.env.password,
-  database: process.env.database,
+  host: host,
+  user: user,
+  port: port as any,
+  password: password,
+  database: database,
 })
 
-module.exports = db
+export default db

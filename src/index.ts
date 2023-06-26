@@ -1,11 +1,14 @@
-import express, { Request, Response, Application } from 'express'
+import express, { Application } from 'express'
 import cors from 'cors'
+import dotenv from 'dotenv'
+
 import scheduleRouter from './router/schedule'
 import wxMsgRouter from './router/wxMsg'
 import userRouter from './router/user'
 
+dotenv.config({ path: __dirname + '/../.env' })
+
 const app: Application = express()
-const PORT = 3007
 
 app.use(
   cors({
@@ -14,7 +17,7 @@ app.use(
   })
 )
 app.use(express.json()) // for application/json
-app.use(express.urlencoded()) // for application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true })) // for application/x-www-form-urlencoded
 
 app.use((req, res: any, next) => {
   res.cc = function (err: any, status = 500) {
@@ -30,6 +33,6 @@ app.use(scheduleRouter)
 app.use(wxMsgRouter)
 app.use(userRouter)
 
-app.listen(PORT, (): void => {
-  console.log(`服务已运行在http://localhost:${PORT}`)
+app.listen(3007, (): void => {
+  console.log('服务已运行在http://localhost:3007')
 })
