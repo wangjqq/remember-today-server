@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import scheduleRouter from './router/schedule'
 import wxMsgRouter from './router/wxMsg'
 import userRouter from './router/user'
+import logRouter from './router/log'
 
 dotenv.config({ path: __dirname + '/../.env' })
 
@@ -32,6 +33,7 @@ app.use((req, res: any, next) => {
 app.use(scheduleRouter)
 app.use(wxMsgRouter)
 app.use(userRouter)
+app.use(logRouter)
 
 app.listen(3007, (): void => {
   console.log('服务已运行在http://localhost:3007')

@@ -1,11 +1,9 @@
 import crypto from 'crypto'
 import { downloadImage } from '../utils/utils'
 import db from '../db'
-import logger from '../log'
 
 export const wxLogin = (req: any, res: any) => {
   const { headimgurl = 'https://www.baidu.com/img/bd_logo1.png', nickname = '今日有记用户' } = req.body
-  logger.info(`用户${nickname}登录`)
   const UUID = crypto.randomUUID()
   downloadImage(headimgurl, `./static/avatar/${UUID}.png`)
 
