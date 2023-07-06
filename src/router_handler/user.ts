@@ -17,7 +17,7 @@ export const wxLogin = (req: any, res: any) => {
       return res.cc(err)
     }
     res.send({
-      status: 200,
+      code: '200',
       message: 'success',
     })
   })

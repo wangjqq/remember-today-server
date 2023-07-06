@@ -6,6 +6,8 @@ import scheduleRouter from './router/schedule'
 import wxMsgRouter from './router/wxMsg'
 import userRouter from './router/user'
 import logRouter from './router/log'
+import { scheduleJob } from './utils/system'
+import systemRouter from './router/system'
 
 dotenv.config({ path: __dirname + '/../.env' })
 
@@ -13,7 +15,7 @@ const app: Application = express()
 
 app.use(
   cors({
-    origin: 'https://localhost:8080',
+    origin: 'http://localhost:3000',
     credentials: true,
   })
 )
@@ -34,6 +36,9 @@ app.use(scheduleRouter)
 app.use(wxMsgRouter)
 app.use(userRouter)
 app.use(logRouter)
+app.use(systemRouter)
+
+scheduleJob()
 
 app.listen(3007, (): void => {
   console.log('服务已运行在http://localhost:3007')
