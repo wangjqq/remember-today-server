@@ -6,8 +6,7 @@ import db from '../db'
 const startTime = Math.floor(Date.now() / 1000)
 
 export const scheduleJob = () => {
-  //每分钟的第30秒定时执行一次:
-  schedule.scheduleJob('1 10 * * * *', () => {
+  schedule.scheduleJob('0 0/30 * * * *', () => {
     async function getLoad() {
       const cpus = os.cpus()
       let totalTime = 0
@@ -31,13 +30,13 @@ export const scheduleJob = () => {
         free_rem: (os.freemem() / 1024 / 1024 / 1024).toFixed(2),
         time: date.toLocaleString(),
         environmental_run_time: (os.uptime() / 60 / 60).toFixed(2),
-        system_run_time: Math.floor(Date.now() / 1000) - startTime,
+        system_run_time: ((Math.floor(Date.now() / 1000) - startTime) / 3600).toFixed(2),
         cpu_temperature: cpu_temperature.main || 0,
       }
     }
     getLoad().then((res) => {
       const sqlStr = `INSERT INTO sys_run_log SET ?`
-      db.query(sqlStr, res, (err, results) => {
+      db.query(sqlStr, { ...res, timestamp: Date.now() }, (err, results) => {
         console.log(err, results)
       })
     })
