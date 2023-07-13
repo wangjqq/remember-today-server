@@ -6,7 +6,7 @@ log4js.configure({
       // 设置类型为 dateFile
       type: 'dateFile',
       // 配置文件名为 run.log
-      filename: __dirname + '/../../log/run.log',
+      filename: __dirname + '/../../log/error.log',
       // 指定编码格式为 utf-8
       encoding: 'utf-8',
       // 配置 layout，此处使用自定义模式 pattern
@@ -25,7 +25,7 @@ log4js.configure({
   },
   categories: {
     // 设置默认的 categories
-    default: { appenders: ['cheese'], level: 'debug' },
+    default: { appenders: ['cheese'], level: 'error' },
   },
 })
 

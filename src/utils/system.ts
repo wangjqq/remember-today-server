@@ -2,6 +2,7 @@ import os from 'os'
 import schedule from 'node-schedule'
 import si from 'systeminformation'
 import db from '../db'
+import logger from '../log'
 
 const startTime = Math.floor(Date.now() / 1000)
 
@@ -37,7 +38,9 @@ export const scheduleJob = () => {
     getLoad().then((res) => {
       const sqlStr = `INSERT INTO sys_run_log SET ?`
       db.query(sqlStr, { ...res, timestamp: Date.now() }, (err, results) => {
-        console.log(err, results)
+        if (err) {
+          logger.error(`更新系统日志失败${err instanceof Error ? err.message : err}`)
+        }
       })
     })
   })

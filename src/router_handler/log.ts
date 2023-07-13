@@ -18,7 +18,7 @@ export const addLog = (req: any, res: any) => {
 
 // 查询日志
 export const getLog = (req: any, res: any) => {
-  const { page, size, category, level, time, name } = req.query
+  const { page, size, category, level, timestamp, name } = req.query
   // 计算偏移量
   const offset = (page - 1) * size
   // 构建查询条件
@@ -32,8 +32,13 @@ export const getLog = (req: any, res: any) => {
     conditions.push(`level = '${level}'`)
   }
   // 如果有 time 参数，添加到条件数组中
-  if (time) {
-    conditions.push(`time = '${time}'`)
+  if (timestamp) {
+    const startDate = new Date(timestamp) // 要查询的日期
+    const startOfDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()) // 将时间设置为当天开始的时间
+    const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000) // 将时间设置为当天结束的时间（加24小时的毫秒数）
+    const startOfDayTimestamp = startOfDay.getTime() // 获取当天开始的时间戳
+    const endOfDayTimestamp = endOfDay.getTime() // 获取当天结束的时间戳
+    conditions.push(`timestamp >= ${startOfDayTimestamp} AND timestamp <= ${endOfDayTimestamp}`)
   }
   // 如果有 name 参数，添加到条件数组中，使用 LIKE 运算符和 % 通配符实现模糊查询
   if (name) {
@@ -43,7 +48,6 @@ export const getLog = (req: any, res: any) => {
   const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : ''
   // 构建完整的 sql 语句，使用 LIMIT 和 OFFSET 实现分页
   const sqlStr = `SELECT * FROM log_activity ${whereClause} ORDER BY id DESC LIMIT ${size} OFFSET ${offset}   `
-  console.log(sqlStr)
   db.query(sqlStr, (err, results1) => {
     if (err) {
       return res.cc(err)
@@ -61,8 +65,5 @@ export const getLog = (req: any, res: any) => {
         data: { list: results1, total: results.length },
       })
     })
-
-    // const total = result[0].total
-    // 将 total 返回给前端，或者和分页数据一起返回
   })
 }
